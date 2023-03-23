@@ -5,32 +5,16 @@
 #include "raymath.h"
 #include <nlohmann/json.hpp>
 #include <iostream>
+#include "utils.h"
 
 #define MAPS_PATH "/Users/martonszuts/Code/C++/RayLib/star-breaker/maps/"
-
-bool CheckCollisionCircleLine(Vector2 circleCenter, float radius, Vector2 lineStart, Vector2 lineEnd)
-{
-    Vector2 lineDiff = Vector2Subtract(lineEnd, lineStart);
-    Vector2 circleToLineStart = Vector2Subtract(circleCenter, lineStart);
-
-    float t = Vector2DotProduct(circleToLineStart, lineDiff) / Vector2DotProduct(lineDiff, lineDiff);
-
-    if (t < 0.0f)
-        t = 0.0f;
-    else if (t > 1.0f)
-        t = 1.0f;
-
-    Vector2 projection = Vector2Add(lineStart, Vector2Scale(lineDiff, t));
-    Vector2 circleToProjection = Vector2Subtract(circleCenter, projection);
-
-    return (Vector2LengthSqr(circleToProjection) <= radius * radius);
-}
 
 int main()
 {
     const int screenWidth = 800;
     const int screenHeight = 600;
     std::ifstream f(MAPS_PATH + std::string("test.json"));
+    SetTargetFPS(160);
     if (!f) {
         std::cerr << "Failed to open file: " << std::strerror(errno) << std::endl;
         return 1;
@@ -93,7 +77,6 @@ int main()
             ballSpeed = Vector2Scale(normal, speedLength);
         }
 
-        // Triangle
         // Triangle
         Vector2 edgeAB = Vector2Subtract(triangleB, triangleA);
         Vector2 edgeBC = Vector2Subtract(triangleC, triangleB);

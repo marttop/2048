@@ -8,12 +8,20 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
-# target_sources(${PROJECT_NAME} PRIVATE "src/*.cpp \
-#                                         src/*.hpp")
+target_sources(${PROJECT_NAME} PRIVATE "src/utils/utils.cpp"
+                                        "src/utils/utils.h"
+                                        "src/maps/Maps.cpp"
+                                        "src/maps/Maps.hpp"
+)
 
 target_link_libraries(${PROJECT_NAME} raylib)
 # Change the line below to link with the absolute path
 
+# Project includes
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/utils)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/Maps)
+
+# Include for libs
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/submodules/raygui/src)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/submodules/json/include)
 
