@@ -6,10 +6,10 @@ Brick/Block breaker project, made in raylib.
 
 ## Build
 ### Linux - Debian
-- Install clang:
-        ```wget https://apt.llvm.org/llvm.sh```  
-        ```chmod +x llvm.sh```  
-        ```sudo ./llvm.sh <version number>```  
+- Install clang:  
+  - ```wget https://apt.llvm.org/llvm.sh```  
+  - ```chmod +x llvm.sh```  
+  - ```sudo ./llvm.sh <version number>```  
 - Run ```sudo apt install g++``` (for GNU compiler) or ```sudo apt install clang``` (for clang compiler)
 - [Install raylib on linux](https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux)
 - Run ```sudo apt install cmake```
