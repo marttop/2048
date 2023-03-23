@@ -11,12 +11,14 @@ Brick/Block breaker project, made in raylib.
         chmod +x llvm.sh
         sudo ./llvm.sh <version number>
 - Run sudo apt install g++ (for GNU compiler) or sudo apt install clang (for clang compiler)
+- [Install raylib on linux](https://github.com/raysan5/raylib/wiki/Working-on-GNU-Linux)
 - Run sudo apt install cmake
 - Run sudo apt install ninja-build
 
 ### Macos
 
 - Clang should come with Xcode
+- Run brew install raylib
 - Run brew install ninja
 - Run brew install cmake
 
