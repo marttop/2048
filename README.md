@@ -5,6 +5,20 @@
 Brick/Block breaker project, made in raylib.
 
 ## Build
+### Linux - Debian
+- Install clang:
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh <version number>
+- Run sudo apt install g++ (for GNU compiler) or sudo apt install clang (for clang compiler)
+- Run sudo apt install cmake
+- Run sudo apt install ninja-build
+
+### Macos
+
+- Clang should come with Xcode
+- Run brew install ninja
+- Run brew install cmake
 
 Clone the submodules
 ```bash
@@ -14,6 +28,14 @@ git submodule update --init --recursive
 Build the dependencies
 ```bash
 ./build_submodules.sh
+```
+
+Build the project
+```
+mkdir build
+cd build
+cmake -G "Ninja" ..
+cmake --build . --target all
 ```
 
 ## Troubleshooting

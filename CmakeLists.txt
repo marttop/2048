@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Gpt-test)
+project(star-breaker)
 
 find_package(raylib 4.2.0 REQUIRED)
 
