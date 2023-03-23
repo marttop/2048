@@ -1,0 +1,32 @@
+cmake_minimum_required(VERSION 3.16)
+project(Gpt-test)
+
+find_package(raylib 4.2.0 REQUIRED)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+
+add_executable(${PROJECT_NAME} src/main.cpp)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+# target_sources(${PROJECT_NAME} PRIVATE "src/*.cpp \
+#                                         src/*.hpp")
+
+target_link_libraries(${PROJECT_NAME} raylib)
+# Change the line below to link with the absolute path
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/submodules/raygui/src)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/submodules/json/include)
+
+set(RAYGUI_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/submodules/raygui/raygui.dynlib")
+message(STATUS "RAYGUI_LIBRARY: ${RAYGUI_LIBRARY}")
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+COMMAND ${CMAKE_COMMAND} -E copy_if_different
+"${RAYGUI_LIBRARY}"
+$<TARGET_FILE_DIR:${PROJECT_NAME}>)
+target_link_libraries(${PROJECT_NAME} "${RAYGUI_LIBRARY}")
+
+if (APPLE)
+    target_link_libraries(${PROJECT_NAME} "-framework IOKit")
+    target_link_libraries(${PROJECT_NAME} "-framework Cocoa")
+    target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
+endif()
