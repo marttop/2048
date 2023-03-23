@@ -1,0 +1,6 @@
+[submodule "submodules/raygui"]
+	path = submodules/raygui
+	url = git@github.com:raysan5/raygui.git
+[submodule "submodules/json"]
+	path = submodules/json
+	url = git@github.com:nlohmann/json.git

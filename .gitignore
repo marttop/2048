@@ -1,0 +1,5 @@
+build/
+*.opp
+*.a
+*.so
+*.out
