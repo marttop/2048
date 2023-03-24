@@ -67,6 +67,8 @@ void Ball::update(float deltaTime, std::vector<std::shared_ptr<IEntity>>& m_enti
                     float maxBounceAngle = 75.0f;  // Adjust this value to control the maximum bounce angle
                     float bounceAngle = (relativeIntersectX / (rect.width / 2)) * maxBounceAngle;
 
+                    INFO("bounce angle: {0}", bounceAngle);
+
                     // Calculate new direction and keep the original speed magnitude
                     float originalSpeedMagnitude = Vector2Length(_speed);
                     Vector2 newDirection = {-sinf(bounceAngle * DEG2RAD), -cosf(bounceAngle * DEG2RAD)};
