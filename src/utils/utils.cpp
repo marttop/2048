@@ -18,19 +18,19 @@ bool CheckCollisionCircleLine(Vector2 circleCenter, float radius, Vector2 lineSt
     return (Vector2LengthSqr(circleToProjection) <= radius * radius);
 }
 
-nlohmann::json getJsonFromFile(const std::string &filepath)
-{
-    std::ifstream f(filepath);
-    if (!f) {
-        std::cerr << "Failed to open file: " << std::strerror(errno) << std::endl;
-        return 1;
-    }
-    nlohmann::json data;
-    try {
-        data = nlohmann::json::parse(f);
-        std::cout << data.dump() << std::endl;
-    } catch (std::exception &e) {
-        std::cerr << "Failed to parse JSON: " << e.what() << std::endl;
-        return 1;
-    }
-}
+// nlohmann::json getJsonFromFile(const std::string &filepath)
+// {
+//     std::ifstream f(filepath);
+//     if (!f) {
+//         std::cerr << "Failed to open file: " << std::strerror(errno) << std::endl;
+//         return 1;
+//     }
+//     nlohmann::json data;
+//     try {
+//         data = nlohmann::json::parse(f);
+//         std::cout << data.dump() << std::endl;
+//     } catch (std::exception &e) {
+//         std::cerr << "Failed to parse JSON: " << e.what() << std::endl;
+//         return 1;
+//     }
+// }

@@ -3,37 +3,58 @@ project(star-breaker)
 
 find_package(raylib 4.2.0 REQUIRED)
 
+## ENABLE LOGGING ##
+option(LOGGING "Enable logging" ON)
+
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 target_sources(${PROJECT_NAME} PRIVATE "src/utils/utils.cpp"
-                                        "src/utils/utils.h"
-                                        "src/maps/Maps.cpp"
-                                        "src/maps/Maps.hpp"
+    "src/scenes/GameScene.cpp"
+    "src/maps/Maps.cpp"
+    "src/entities/Ball.cpp"
+    "src/entities/Brick.cpp"
+    "src/entities/Player.cpp"
 )
 
+# raygui
+set(RAYGUI_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/libs/raygui.dynlib")
+message(STATUS "RAYGUI_LIBRARY: ${RAYGUI_LIBRARY}")
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${RAYGUI_LIBRARY}" $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+target_link_libraries(${PROJECT_NAME} "${RAYGUI_LIBRARY}")
+
+# spdlog
+find_library(SPDLOG NAMES spdlog PATHS "${CMAKE_CURRENT_SOURCE_DIR}/libs")
+if(LOGGING)
+    add_compile_definitions(LOGGING)
+endif()
+
+
+if(SPDLOG)
+    message(STATUS "Found spdlog: ${SPDLOG}")
+else()
+    message(FATAL_ERROR "Cannot find spdlog")
+endif()
+
+# Linking libraries
 target_link_libraries(${PROJECT_NAME} raylib)
-# Change the line below to link with the absolute path
+target_link_libraries(${PROJECT_NAME} ${SPDLOG})
 
 # Project includes
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/entities)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/interface)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/utils)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/Maps)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/maps)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/scenes)
 
 # Include for libs
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/submodules/logger/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/submodules/raygui/src)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/submodules/json/include)
 
-set(RAYGUI_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/submodules/raygui/raygui.dynlib")
-message(STATUS "RAYGUI_LIBRARY: ${RAYGUI_LIBRARY}")
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-COMMAND ${CMAKE_COMMAND} -E copy_if_different
-"${RAYGUI_LIBRARY}"
-$<TARGET_FILE_DIR:${PROJECT_NAME}>)
-target_link_libraries(${PROJECT_NAME} "${RAYGUI_LIBRARY}")
-
-if (APPLE)
+if(APPLE)
     target_link_libraries(${PROJECT_NAME} "-framework IOKit")
     target_link_libraries(${PROJECT_NAME} "-framework Cocoa")
     target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
