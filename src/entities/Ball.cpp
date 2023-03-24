@@ -55,36 +55,42 @@ void Ball::update(float deltaTime, std::vector<std::shared_ptr<IEntity>>& m_enti
 
         if (entityType == EntityType::Brick || entityType == EntityType::Player) {
             if (entity->collidesWithBall(_position, _radius)) {
-                // Determine which side of the rectangle the ball hit
-                float prevX = _position.x - _speed.x * deltaTime;
-                float prevY = _position.y - _speed.y * deltaTime;
-
                 // Assuming the entity has a getRect() function only for the ones that have a rect (e.g., Brick and Player)
                 Rectangle rect = entity->getRect();
 
-                Vector2 normal;
                 if (entityType == EntityType::Player) {
+                    // Reposition the ball outside the paddle
+                    _position.y = rect.y - _radius;
+
                     // For the paddle, calculate the normal based on the relative horizontal position of the ball to the center of the paddle
                     float relativeIntersectX = (rect.x + rect.width / 2) - _position.x;
-                    float maxBounceAngle = 75.0f; // Adjust this value to control the maximum bounce angle
+                    float maxBounceAngle = 75.0f;  // Adjust this value to control the maximum bounce angle
                     float bounceAngle = (relativeIntersectX / (rect.width / 2)) * maxBounceAngle;
-                    normal.x = -sinf(bounceAngle * DEG2RAD);
-                    normal.y = -cosf(bounceAngle * DEG2RAD);
+
+                    // Calculate new direction and keep the original speed magnitude
+                    float originalSpeedMagnitude = Vector2Length(_speed);
+                    Vector2 newDirection = {-sinf(bounceAngle * DEG2RAD), -cosf(bounceAngle * DEG2RAD)};
+                    _speed.x = newDirection.x * originalSpeedMagnitude;
+                    _speed.y = newDirection.y * originalSpeedMagnitude;
                 } else {
-                    // For the bricks, determine the normal based on the side the ball hit
+                    // Determine which side of the rectangle the ball hit
+                    float prevX = _position.x - _speed.x * deltaTime;
+                    float prevY = _position.y - _speed.y * deltaTime;
+
+                    Vector2 normal;
                     if (prevX - _radius < rect.x + rect.width && prevX + _radius > rect.x) {
                         normal = {0, _speed.y < 0 ? 1.f : -1.f};
                     } else {
                         normal = {_speed.x < 0 ? 1.f : -1.f, 0};
                     }
+
+                    normal = Vector2Normalize(normal);
+
+                    // Reflect the ball's velocity based on the collision normal
+                    float dot = 2 * (Vector2DotProduct(_speed, normal));
+                    _speed.x -= dot * normal.x;
+                    _speed.y -= dot * normal.y;
                 }
-
-                normal = Vector2Normalize(normal);
-
-                // Reflect the ball's velocity based on the collision normal
-                float dot = 2 * (Vector2DotProduct(_speed, normal));
-                _speed.x -= dot * normal.x;
-                _speed.y -= dot * normal.y;
             }
         }
     }
@@ -92,6 +98,7 @@ void Ball::update(float deltaTime, std::vector<std::shared_ptr<IEntity>>& m_enti
     _position.x += _speed.x * deltaTime;
     _position.y += _speed.y * deltaTime;
 }
+
 
 
 
