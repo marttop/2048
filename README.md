@@ -9,7 +9,7 @@ This is a simple implementation of the popular 2048 game in C++ using the Raylib
 🚧 This project is currently under construction. 🚧
 
 ## Build
-### Linux - Debian
+### Linux - Debian 
 - Install clang:  
   - ```wget https://apt.llvm.org/llvm.sh```  
   - ```chmod +x llvm.sh```  
