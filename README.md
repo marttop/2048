@@ -57,7 +57,21 @@ Run this command **after replacing the placeholder with yout path**
 export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:YOUR/PATH/TO/THE/REPOSITORY/2048/submodules/raygui
 ```
 
+## Logging
+
+By default, the `LOGGING` option is set to `ON` in the CMake build. This enables logging throughout the game code, which can be useful for debugging and troubleshooting.
+
+If you wish to disable logging, you can set the `LOGGING` option to `OFF` when running CMake. For example, if you're using the command line, inside your build folder you can run:  
+```
+cmake -G "Ninja" -DLOGGING=OFF .
+```
+
+Alternatively, if you're using an IDE such as Visual Studio or CLion, you can configure the `LOGGING` option in the CMake settings.
+
+Note that disabling logging can improve the performance of the game, but may make it more difficult to diagnose issues if they arise. It's recommended to leave logging enabled during development and testing, and disable it only for production builds.
+
 ## Submodules
 
 - [nlohmann/json - release/v3.11.2](https://github.com/nlohmann/json/tree/v3.11.2)
+- [gabime/spdlog - v1.11.0](https://github.com/gabime/spdlog/tree/v1.11.0)
 - [raysan5/raygui - 3.2](https://github.com/raysan5/raygui/tree/3.2)
