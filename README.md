@@ -4,6 +4,10 @@
 
 This is a simple implementation of the popular 2048 game in C++ using the Raylib game library. The game is played on a 4x4 grid and the objective is to combine tiles with the same number to reach the tile with the value of 2048.
 
+## Project Status
+
+🚧 This project is currently under construction. 🚧
+
 ## Build
 ### Linux - Debian
 - Install clang:  
