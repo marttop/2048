@@ -14,6 +14,7 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 target_sources(${PROJECT_NAME} PRIVATE "src/utils/utils.cpp"
     "src/scenes/GameScene.cpp"
     "src/entities/Tile.cpp"
+    "src/entities/Text.cpp"
 )
 
 # raygui

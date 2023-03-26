@@ -7,6 +7,7 @@
 enum class EntityType {
     Tile,
     PlaceholderTile,
+    Text,
     // Add other entity types here
 };
 

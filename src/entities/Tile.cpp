@@ -1,5 +1,5 @@
 /*
-** star-breaker
+** 2048
 ** File description:
 ** Tile
 */
@@ -17,15 +17,10 @@ std::unordered_map<std::string, Color> tileColors = {
     {"256", {231, 205, 115, 255}},
     {"512", {230, 201, 101, 255}},
     {"1024", {230, 198, 89, 255}},
-    {"2048", {230, 195, 79, 255}}
-};
+    {"2048", {230, 195, 79, 255}}};
 
-Tile::Tile(Rectangle rect, TilePos mapPosition, bool isActive) : _rect(rect),
-                                                                 _mapPosition(mapPosition),
-                                                                 _color(Color{238, 228, 218, 255}),
-                                                                 _value(2),
-                                                                 _direction(Direction::None),
-                                                                 _isActive(isActive)
+Tile::Tile(const Rectangle &rect, const TilePos &mapPosition, const bool isActive)
+    : _rect(rect), _mapPosition(mapPosition), _color(Color{238, 228, 218, 255}), _value(2), _direction(Direction::None), _isActive(isActive)
 {
     if (!isActive) _color = Color{202, 193, 181, 255};
     if (isActive) {
@@ -33,7 +28,7 @@ Tile::Tile(Rectangle rect, TilePos mapPosition, bool isActive) : _rect(rect),
         _value = num ? 2 : 4;
         _color = tileColors[std::to_string(_value)];
     }
-    _font = LoadFont("/Users/martonszuts/Code/C++/RayLib/star-breaker/fonts/ClearSans-Bold.ttf");
+    _font = LoadFont("/Users/martonszuts/Code/C++/RayLib/2048/fonts/ClearSans-Bold.ttf");
     _fontSize = std::min(_rect.width / 2, _rect.height / 2);
     _font.baseSize = _fontSize;
 }
@@ -49,11 +44,9 @@ void Tile::draw() const
         (Rectangle){_rect.x, _rect.y, _rect.width, _rect.height},
         0.04,  // corner radius
         1,
-        _color
-    );
+        _color);
 
     if (_isActive) {
-
         // Draw tile value centered in the tile
         Vector2 textMeasure = MeasureTextEx(_font, std::to_string(_value).c_str(), _fontSize, 0);
         Vector2 textPos = {
@@ -130,8 +123,7 @@ void Tile::setMapPosition(TilePos pos)
 
     if (_direction == Direction::Left || _direction == Direction::Right) {
         _rect.x = ((SCREEN_WIDTH - gridSize) / 2) + pos.x * (TILE_PADDING + tileSize) + TILE_PADDING;
-    }
-    else if (_direction == Direction::Up || _direction == Direction::Down) {
+    } else if (_direction == Direction::Up || _direction == Direction::Down) {
         _rect.y = ((SCREEN_HEIGHT - gridSize) / 2) + pos.y * (TILE_PADDING + tileSize) + TILE_PADDING + GRID_PADDING_VERTICAL;
     }
 }

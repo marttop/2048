@@ -1,5 +1,5 @@
 /*
-** star-breaker
+** 2048
 ** File description:
 ** utils
 */

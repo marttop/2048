@@ -9,32 +9,11 @@ public:
 
     GameScene();
     ~GameScene() = default;
-    /**
-     * @brief Adds an entity to the scene.
-     * @param entity The entity to add to the scene.
-     */
+
     void addEntity(std::shared_ptr<IEntity> entity) override;
-
-    /**
-     * @brief Removes an entity from the scene.
-     * @param entity The entity to remove from the scene.
-     */
     void removeEntity(std::shared_ptr<IEntity> entity) override;
-
-    /**
-     * @brief Updates all entities in the scene.
-     * @param deltaTime The time passed since the last update.
-     */
     void update(float deltaTime) override;
-
-    /**
-     * @brief Handles events in the scene.
-     */
     void handleEvent() override;
-
-    /**
-     * @brief Draws all entities in the scene.
-     */
     void draw() const override;
 
 private:
@@ -50,6 +29,7 @@ private:
 
     void resetKeyevents();
 
+    // CORE
     std::vector<std::shared_ptr<IEntity>> m_entities;
     std::vector<std::vector<std::shared_ptr<Tile>>> _tileMap;
     bool _isEvent;
@@ -61,4 +41,7 @@ private:
     float _tileHeight;
     float _gridX;
     float _gridY;
+
+    // GAMEPLAY
+    int _score;
 };

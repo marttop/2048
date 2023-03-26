@@ -1,8 +1,8 @@
-# Star Breaker
+# 2048
 
 ## Description
 
-Brick/Block breaker project, made in raylib.
+This is a simple implementation of the popular 2048 game in C++ using the Raylib game library. The game is played on a 4x4 grid and the objective is to combine tiles with the same number to reach the tile with the value of 2048.
 
 ## Build
 ### Linux - Debian
@@ -46,15 +46,15 @@ If you ever run to something similar during execution
 
 ```bash
 dyld[23707]: Library not loaded: raygui.dynlib
-  Referenced from: <8487F789-1CFC-3D75-B1DD-B2CC8576963F> /Users/martonszuts/Code/C++/RayLib/star-breaker/build/Gpt-test
-  Reason: tried: 'raygui.dynlib' (no such file), '/System/Volumes/Preboot/Cryptexes/OSraygui.dynlib' (no such file), 'raygui.dynlib' (no such file), '/usr/local/lib/raygui.dynlib' (no such file), '/usr/lib/raygui.dynlib' (no such file, not in dyld cache), '/Users/martonszuts/Code/C++/RayLib/star-breaker/raygui.dynlib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/Users/martonszuts/Code/C++/RayLib/star-breaker/raygui.dynlib' (no such file), '/Users/martonszuts/Code/C++/RayLib/star-breaker/raygui.dynlib' (no such file), '/usr/local/lib/raygui.dynlib' (no such file), '/usr/lib/raygui.dynlib' (no such file, not in dyld cache)
+  Referenced from: <8487F789-1CFC-3D75-B1DD-B2CC8576963F> /Users/martonszuts/Code/C++/RayLib/2048/build/Gpt-test
+  Reason: tried: 'raygui.dynlib' (no such file), '/System/Volumes/Preboot/Cryptexes/OSraygui.dynlib' (no such file), 'raygui.dynlib' (no such file), '/usr/local/lib/raygui.dynlib' (no such file), '/usr/lib/raygui.dynlib' (no such file, not in dyld cache), '/Users/martonszuts/Code/C++/RayLib/2048/raygui.dynlib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/Users/martonszuts/Code/C++/RayLib/2048/raygui.dynlib' (no such file), '/Users/martonszuts/Code/C++/RayLib/2048/raygui.dynlib' (no such file), '/usr/local/lib/raygui.dynlib' (no such file), '/usr/lib/raygui.dynlib' (no such file, not in dyld cache)
 [1]    23707 abort
 ```
 
 Run this command **after replacing the placeholder with yout path**
 
 ```bash
-export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:YOUR/PATH/TO/THE/REPOSITORY/star-breaker/submodules/raygui
+export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:YOUR/PATH/TO/THE/REPOSITORY/2048/submodules/raygui
 ```
 
 ## Submodules

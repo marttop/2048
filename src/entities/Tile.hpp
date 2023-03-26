@@ -1,6 +1,5 @@
 /*
-** EPITECH PROJECT, 2023
-** star-breaker
+** 2048
 ** File description:
 ** Ball
 */
@@ -25,7 +24,7 @@ typedef struct TilePos {
 
 class Tile : public IEntity {
     public:
-        Tile(Rectangle rect, TilePos mapPosition, bool isActive = false);
+        Tile(const Rectangle &rect, const TilePos &mapPosition, const bool isActive = false);
         ~Tile();
 
         void draw() const override;

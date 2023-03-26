@@ -1,13 +1,12 @@
 /*
-** EPITECH PROJECT, 2023
-** star-breaker
+** 2048
 ** File description:
 ** GameScene
 */
 
 #include "GameScene.hpp"
 
-GameScene::GameScene() : _tileMap(4, std::vector<std::shared_ptr<Tile>>(4, nullptr)), _isEvent(true)
+GameScene::GameScene() : _tileMap(4, std::vector<std::shared_ptr<Tile>>(4, nullptr)), _isEvent(true), _score(0)
 {
     _gridWidth = GRID_RATIO * SCREEN_WIDTH;
     _gridHeight = GRID_RATIO * SCREEN_HEIGHT;
@@ -54,8 +53,7 @@ void GameScene::moveTileLeft(int y, int x)
         if (_tileMap[y][i - 1] != nullptr) {
             checkFusion(_tileMap[y][i], _tileMap[y][i - 1]);
             break;
-        }
-        else {
+        } else {
             // Swap the tiles
             std::shared_ptr<Tile> temp = _tileMap[y][i];
             _tileMap[y][i] = _tileMap[y][i - 1];
@@ -74,8 +72,7 @@ void GameScene::moveTileRight(int y, int x)
         if (_tileMap[y][i + 1] != nullptr) {
             checkFusion(_tileMap[y][i], _tileMap[y][i + 1]);
             break;
-        }
-        else {
+        } else {
             // Swap the tiles
             std::shared_ptr<Tile> temp = _tileMap[y][i];
             _tileMap[y][i] = _tileMap[y][i + 1];
@@ -93,8 +90,7 @@ void GameScene::moveTileUp(int y, int x)
         if (_tileMap[i - 1][x] != nullptr) {
             checkFusion(_tileMap[i][x], _tileMap[i - 1][x]);
             break;
-        }
-        else {
+        } else {
             // Swap the tiles
             std::shared_ptr<Tile> temp = _tileMap[i][x];
             _tileMap[i][x] = _tileMap[i - 1][x];
@@ -113,8 +109,7 @@ void GameScene::moveTileDown(int y, int x)
         if (_tileMap[i + 1][x] != nullptr) {
             checkFusion(_tileMap[i][x], _tileMap[i + 1][x]);
             break;
-        }
-        else {
+        } else {
             // Swap the tiles
             std::shared_ptr<Tile> temp = _tileMap[i][x];
             _tileMap[i][x] = _tileMap[i + 1][x];
@@ -130,14 +125,22 @@ void GameScene::checkFusion(std::shared_ptr<Tile> moving, std::shared_ptr<Tile> 
     int movingValue = moving->getValue();
     int obstacleValue = obstacle->getValue();
     if (movingValue == obstacleValue) {
+        int total = obstacleValue + movingValue;
+        _score += total;
         _tilesMoved += 1;
-        obstacle->setValue(obstacleValue + movingValue);
+        obstacle->setValue(total);
         removeEntity(moving);
         int x = moving->getMapPosition().x;
         int y = moving->getMapPosition().y;
         if (y >= 0 && y < _tileMap.size() && x >= 0 && x < _tileMap[y].size() && _tileMap[y][x] != nullptr) {
             _tileMap[y][x] = nullptr;
         }
+
+        DEBUG("Fusion of : (y:{0},x:{1}) into -> (y:{2},x:{3})", moving->getMapPosition().y,
+              moving->getMapPosition().x, obstacle->getMapPosition().y, obstacle->getMapPosition().x);
+        DEBUG("Result of fusion : {0} + {1} = {2}", movingValue, obstacleValue, total);
+        DEBUG("Current total score : {0}", _score);
+
         moving = nullptr;
     }
 }
@@ -171,7 +174,7 @@ void GameScene::resetKeyevents()
 {
     float currentTime = 0.0f;
     static float previousTime = 0.0f;
-    const float timeInterval = 0.2f; // Reset the timer every 0.x seconds
+    const float timeInterval = 0.2f;  // Reset the timer every 0.x seconds
 
     currentTime = GetTime();
     if (currentTime - previousTime >= timeInterval) {
@@ -213,7 +216,7 @@ void GameScene::update(float deltaTime)
 
                     if (_direction == Direction::Up) {
                         moveTileUp(y, x);
-                    } else if (_direction == Direction::Down){
+                    } else if (_direction == Direction::Down) {
                         moveTileDown(y, x);
                     }
                 }
@@ -271,7 +274,7 @@ TilePos GameScene::getRandomTilePos(bool isMapped) const
     for (int y = 0; y < _tileMap.size(); ++y) {
         for (int x = 0; x < _tileMap[y].size(); ++x) {
             if (!_tileMap[y][x]) {
-                nonNullPositions.push_back({ x, y });
+                nonNullPositions.push_back({x, y});
             }
         }
     }

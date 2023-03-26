@@ -1,9 +1,14 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
+#ifndef SPDLOG_ACTIVE_LEVEL
+    #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+#endif//SPDLOG_ACTIVE_LEVEL
+
 #include <spdlog/spdlog.h>
 
 #ifdef LOGGING
+
     #define TRACE SPDLOG_TRACE
     #define DEBUG SPDLOG_DEBUG
     #define INFO SPDLOG_INFO
