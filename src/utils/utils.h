@@ -7,9 +7,13 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
-#define SCREEN_WIDTH 1440
-#define SCREEN_HEIGHT 920
-#define MAPS_PATH "/Users/martonszuts/Code/C++/RayLib/star-breaker/maps/"
+#define SCREEN_WIDTH 900
+#define SCREEN_HEIGHT 900
+#define TITLE "2048"
+#define FPS 60
+#define TILE_PADDING 15.f
+#define GRID_RATIO 0.6
+#define GRID_PADDING_VERTICAL 70
 
 #include "raylib.h"
 #include "raymath.h"
@@ -19,6 +23,7 @@
 #include <fstream>
 #include <string>
 #include <memory>
+#include <map>
 
 bool CheckCollisionCircleLine(Vector2 circleCenter, float radius, Vector2 lineStart, Vector2 lineEnd);
 

@@ -1,9 +1,7 @@
 // GameScene.hpp
 
 #include "IScene.hpp"
-#include "Brick.hpp"
-#include "Ball.hpp"
-#include "Player.hpp"
+#include "Tile.hpp"
 
 class GameScene : public IScene {
 public:
@@ -30,10 +28,29 @@ public:
     void update(float deltaTime) override;
 
     /**
+     * @brief Handles events in the scene.
+     */
+    void handleEvent() override;
+
+    /**
      * @brief Draws all entities in the scene.
      */
     void draw() const override;
 
 private:
+    TilePos getRandomTilePos(bool isMapped) const;
+    void moveTileLeft(int y, int x);
+    void moveTileRight(int y, int x);
+    void moveTileUp(int y, int x);
+    void moveTileDown(int y, int x);
+
     std::vector<std::shared_ptr<IEntity>> m_entities;
+    std::vector<std::vector<std::shared_ptr<Tile>>> tileMap;
+    Direction _direction;
+    float _gridWidth;
+    float _gridHeight;
+    float _tileWidth;
+    float _tileHeight;
+    float _gridX;
+    float _gridY;
 };

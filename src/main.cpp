@@ -13,17 +13,15 @@ int main()
 {
     float deltaTime;
     INFO("Starting window {0}*{1}", SCREEN_WIDTH, SCREEN_HEIGHT);
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Star Breaker");
-    SetTargetFPS(120);
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, TITLE);
+    SetTargetFPS(FPS);
 
     GameScene gameScene;
 
-    SetTargetFPS(120);
-
     while (!WindowShouldClose()) {
         deltaTime = GetFrameTime();
+        gameScene.handleEvent();
         gameScene.update(deltaTime);
-
         BeginDrawing();
         gameScene.draw();
         EndDrawing();

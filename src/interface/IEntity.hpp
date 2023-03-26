@@ -5,9 +5,9 @@
 #include "utils.h"
 
 enum class EntityType {
-    Ball,
-    Brick,
-    Player
+    Tile,
+    PlaceholderTile,
+    // Add other entity types here
 };
 
 /**
@@ -43,14 +43,6 @@ public:
      * @param position The position to set the entity to.
      */
     virtual void setPosition(const Vector2& position) = 0;
-
-    /**
-     * @brief Checks if the entity collides with a ball.
-     * @param ballPosition The position of the ball.
-     * @param ballRadius The radius of the ball.
-     * @return True if the entity collides with the ball, false otherwise.
-     */
-    virtual bool collidesWithBall(const Vector2& ballPosition, float ballRadius) const = 0;
 
     /**
      * @brief Gets the entity's bounding rectangle.

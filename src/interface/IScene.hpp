@@ -31,6 +31,25 @@ public:
     virtual void update(float deltaTime) = 0;
 
     /**
+     * @brief Gets the entity's bounding rectangle.
+     *
+     * This function returns the bounding rectangle of the entity if it exists.
+     * If the entity doesn't have a bounding rectangle, it returns an empty or invalid rectangle.
+     * The default implementation returns an empty rectangle.
+     *
+     * @return The entity's bounding rectangle or an empty/invalid rectangle if not applicable.
+     */
+    virtual Rectangle getRect() const
+    {
+        return {0, 0, 0, 0};
+    }
+
+    /**
+     * @brief Handles events in the scene.
+     */
+    virtual void handleEvent() = 0;
+
+    /**
      * @brief Draws all entities in the scene.
      */
     virtual void draw() const = 0;
