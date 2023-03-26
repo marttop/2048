@@ -31,6 +31,7 @@ Tile::Tile(const Rectangle &rect, const TilePos &mapPosition, const bool isActiv
     _font = LoadFont("/Users/martonszuts/Code/C++/RayLib/2048/fonts/ClearSans-Bold.ttf");
     _fontSize = std::min(_rect.width / 2, _rect.height / 2);
     _font.baseSize = _fontSize;
+    _targetPosition = Vector2{rect.x, rect.y};
 }
 
 Tile::~Tile()
@@ -81,8 +82,32 @@ void Tile::setPosition(const Vector2& position)
 void Tile::update(float deltaTime, std::vector<std::shared_ptr<IEntity>>& m_entities)
 {
     (void)m_entities;
-    (void)deltaTime;
+
+    if (_direction != Direction::None) {
+        if (_direction == Direction::Left || _direction == Direction::Right) {
+            float distanceX = _targetPosition.x - _rect.x;
+            float moveX = MOVE_SPEED * deltaTime * (_direction == Direction::Right ? 1 : -1);
+
+            if (fabs(moveX) >= fabs(distanceX)) {
+                _rect.x = _targetPosition.x;
+                _direction = Direction::None;
+            } else {
+                _rect.x += moveX;
+            }
+        } else if (_direction == Direction::Up || _direction == Direction::Down) {
+            float distanceY = _targetPosition.y - _rect.y;
+            float moveY = MOVE_SPEED * deltaTime * (_direction == Direction::Down ? 1 : -1);
+
+            if (fabs(moveY) >= fabs(distanceY)) {
+                _rect.y = _targetPosition.y;
+                _direction = Direction::None;
+            } else {
+                _rect.y += moveY;
+            }
+        }
+    }
 }
+
 
 bool Tile::isActive() const
 {
@@ -120,10 +145,11 @@ void Tile::setMapPosition(TilePos pos)
     _mapPosition = pos;
     const float tileSize = _rect.width;
     const float gridSize = 4 * (_rect.width + TILE_PADDING) + TILE_PADDING;
+    const float paddingHorizontal = (_direction == Direction::Left || _direction == Direction::Right) ? TILE_PADDING : 0;
+    const float paddingVertical = (_direction == Direction::Up || _direction == Direction::Down) ? TILE_PADDING : 0;
 
-    if (_direction == Direction::Left || _direction == Direction::Right) {
-        _rect.x = ((SCREEN_WIDTH - gridSize) / 2) + pos.x * (TILE_PADDING + tileSize) + TILE_PADDING;
-    } else if (_direction == Direction::Up || _direction == Direction::Down) {
-        _rect.y = ((SCREEN_HEIGHT - gridSize) / 2) + pos.y * (TILE_PADDING + tileSize) + TILE_PADDING + GRID_PADDING_VERTICAL;
-    }
+    _targetPosition.x = ((SCREEN_WIDTH - gridSize) / 2) + pos.x * (TILE_PADDING + tileSize) + TILE_PADDING;
+    _targetPosition.y = ((SCREEN_HEIGHT - gridSize) / 2) + pos.y * (TILE_PADDING + tileSize) + TILE_PADDING + GRID_PADDING_VERTICAL;
 }
+
+

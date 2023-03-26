@@ -26,7 +26,7 @@ private:
     void checkFusion(std::shared_ptr<Tile> moving, std::shared_ptr<Tile> obstacle);
     void putRandomTile();
     void putTile(TilePos pos);
-
+    bool areTilesSetteled();
     void resetKeyevents();
 
     // CORE

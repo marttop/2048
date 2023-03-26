@@ -170,6 +170,16 @@ void GameScene::putTile(TilePos pos)
     addEntity(tile);
 }
 
+bool GameScene::areTilesSetteled()
+{
+    for (auto line : _tileMap) {
+        for (auto e : line) {
+            if (e && e->getDirection() != Direction::None) return false;
+        }
+    }
+    return true;
+}
+
 void GameScene::resetKeyevents()
 {
     float currentTime = 0.0f;
@@ -185,7 +195,6 @@ void GameScene::resetKeyevents()
 
 void GameScene::update(float deltaTime)
 {
-    _tilesMoved = 0;
     if (_direction == Direction::Left || _direction == Direction::Right) {
         for (int y = 0; y < _tileMap.size(); y++) {
             int startX = (_direction == Direction::Left) ? 0 : _tileMap[y].size() - 1;
@@ -227,9 +236,13 @@ void GameScene::update(float deltaTime)
         entity->update(deltaTime, m_entities);
     }
     _direction = Direction::None;
-    if (_tilesMoved) {
-        _isEvent = false;
+    bool areSettle = areTilesSetteled();
+    if (_tilesMoved && areSettle) {
+        _isEvent = true;
         putRandomTile();
+        _tilesMoved = 0;
+    } else if (!_tilesMoved && areSettle) {
+        _isEvent = true;
     }
 }
 
@@ -238,15 +251,18 @@ void GameScene::handleEvent()
     if (_isEvent) {
         if (IsKeyDown(KEY_UP)) {
             _direction = Direction::Up;
+            _isEvent = false;
         } else if (IsKeyDown(KEY_DOWN)) {
             _direction = Direction::Down;
+            _isEvent = false;
         } else if (IsKeyDown(KEY_LEFT)) {
             _direction = Direction::Left;
+            _isEvent = false;
         } else if (IsKeyDown(KEY_RIGHT)) {
             _direction = Direction::Right;
+            _isEvent = false;
         }
     }
-    resetKeyevents();
 }
 
 void GameScene::draw() const

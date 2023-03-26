@@ -51,6 +51,8 @@ class Tile : public IEntity {
         bool _isActive;
         Font _font;
         int _fontSize;
+        Vector2 _targetPosition;
+        const float MOVE_SPEED = 2000.0f;
 };
 
 extern std::unordered_map<std::string, Color> tileColors;
