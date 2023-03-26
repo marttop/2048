@@ -9,15 +9,15 @@
 std::unordered_map<std::string, Color> tileColors = {
     {"2", {238, 228, 218, 255}},
     {"4", {237, 224, 200, 255}},
-    {"8", {242, 177, 121, 255}},
-    {"16", {245, 149, 99, 255}},
-    {"32", {246, 124, 95, 255}},
-    {"64", {246, 94, 59, 255}},
-    {"128", {237, 207, 114, 255}},
-    {"256", {237, 204, 97, 255}},
-    {"512", {237, 200, 80, 255}},
-    {"1024", {237, 197, 63, 255}},
-    {"2048", {237, 194, 46, 255}}
+    {"8", {232, 180, 129, 255}},
+    {"16", {232, 153, 108, 255}},
+    {"32", {229, 120, 103, 255}},
+    {"64", {227, 104, 71, 255}},
+    {"128", {232, 208, 126, 255}},
+    {"256", {231, 205, 115, 255}},
+    {"512", {230, 201, 101, 255}},
+    {"1024", {230, 198, 89, 255}},
+    {"2048", {230, 195, 79, 255}}
 };
 
 Tile::Tile(Rectangle rect, TilePos mapPosition, bool isActive) : _rect(rect),
@@ -47,7 +47,7 @@ void Tile::draw() const
 {
     DrawRectangleRounded(
         (Rectangle){_rect.x, _rect.y, _rect.width, _rect.height},
-        0.02,  // corner radius
+        0.04,  // corner radius
         1,
         _color
     );
@@ -59,7 +59,7 @@ void Tile::draw() const
         Vector2 textPos = {
             _rect.x + _rect.width / 2 - textMeasure.x / 2,
             _rect.y + _rect.height / 2 - textMeasure.y / 2 + TILE_PADDING};
-        DrawTextEx(_font, std::to_string(_value).c_str(), textPos, _fontSize, 0, DARKGRAY);
+        DrawTextEx(_font, std::to_string(_value).c_str(), textPos, _fontSize, 0, _value == 2 || _value == 4 ? DARKGRAY : WHITE);
     }
 }
 
@@ -114,6 +114,12 @@ void Tile::setDirection(Direction direction)
 TilePos Tile::getMapPosition() const
 {
     return _mapPosition;
+}
+
+void Tile::setValue(int value)
+{
+    _value = value;
+    _color = tileColors[std::to_string(_value)];
 }
 
 void Tile::setMapPosition(TilePos pos)

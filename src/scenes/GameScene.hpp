@@ -44,8 +44,16 @@ private:
     void moveTileUp(int y, int x);
     void moveTileDown(int y, int x);
 
+    void checkFusion(std::shared_ptr<Tile> moving, std::shared_ptr<Tile> obstacle);
+    void putRandomTile();
+    void putTile(TilePos pos);
+
+    void resetKeyevents();
+
     std::vector<std::shared_ptr<IEntity>> m_entities;
-    std::vector<std::vector<std::shared_ptr<Tile>>> tileMap;
+    std::vector<std::vector<std::shared_ptr<Tile>>> _tileMap;
+    bool _isEvent;
+    int _tilesMoved;
     Direction _direction;
     float _gridWidth;
     float _gridHeight;

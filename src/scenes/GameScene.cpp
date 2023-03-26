@@ -7,7 +7,7 @@
 
 #include "GameScene.hpp"
 
-GameScene::GameScene() : tileMap(4, std::vector<std::shared_ptr<Tile>>(4, nullptr))
+GameScene::GameScene() : _tileMap(4, std::vector<std::shared_ptr<Tile>>(4, nullptr)), _isEvent(true)
 {
     _gridWidth = GRID_RATIO * SCREEN_WIDTH;
     _gridHeight = GRID_RATIO * SCREEN_HEIGHT;
@@ -33,27 +33,8 @@ GameScene::GameScene() : tileMap(4, std::vector<std::shared_ptr<Tile>>(4, nullpt
     }
 
     // Insert first two tiles
-    TilePos randomPos = getRandomTilePos(false);
-
-    std::shared_ptr<Tile> tile = std::make_shared<Tile>(Rectangle{
-                                                            _gridX + randomPos.x * (TILE_PADDING + _tileWidth) + TILE_PADDING,
-                                                            _gridY + randomPos.y * (TILE_PADDING + _tileHeight) + TILE_PADDING,
-                                                            _tileWidth,
-                                                            _tileHeight},
-                                                        randomPos, true);
-
-    tileMap[randomPos.y][randomPos.x] = tile;
-    addEntity(tile);
-
-    randomPos = getRandomTilePos(true);
-    tile = std::make_shared<Tile>(Rectangle{
-                                      _gridX + randomPos.x * (TILE_PADDING + _tileWidth) + TILE_PADDING,
-                                      _gridY + randomPos.y * (TILE_PADDING + _tileHeight) + TILE_PADDING,
-                                      _tileWidth,
-                                      _tileHeight},
-                                  randomPos, true);
-    tileMap[randomPos.y][randomPos.x] = tile;
-    addEntity(tile);
+    putRandomTile();
+    putRandomTile();
 }
 
 void GameScene::addEntity(std::shared_ptr<IEntity> entity)
@@ -70,80 +51,147 @@ void GameScene::moveTileLeft(int y, int x)
 {
     int i = 0;
     for (i = x; i > 0; i--) {
-        if (tileMap[y][i - 1] != nullptr)
+        if (_tileMap[y][i - 1] != nullptr) {
+            checkFusion(_tileMap[y][i], _tileMap[y][i - 1]);
             break;
+        }
         else {
             // Swap the tiles
-            std::shared_ptr<Tile> temp = tileMap[y][i];
-            tileMap[y][i] = tileMap[y][i - 1];
-            tileMap[y][i - 1] = temp;
+            std::shared_ptr<Tile> temp = _tileMap[y][i];
+            _tileMap[y][i] = _tileMap[y][i - 1];
+            _tileMap[y][i - 1] = temp;
+            temp->setMapPosition({i - 1, y});
+            _tilesMoved += 1;
         }
     }
-    tileMap[y][i]->setMapPosition({i, y});
 }
 
 void GameScene::moveTileRight(int y, int x)
 {
     int i = 0;
-    int mapWidth = tileMap[y].size();
+    int mapWidth = _tileMap[y].size();
     for (i = x; i < mapWidth - 1; i++) {
-        if (tileMap[y][i + 1] != nullptr)
+        if (_tileMap[y][i + 1] != nullptr) {
+            checkFusion(_tileMap[y][i], _tileMap[y][i + 1]);
             break;
+        }
         else {
             // Swap the tiles
-            std::shared_ptr<Tile> temp = tileMap[y][i];
-            tileMap[y][i] = tileMap[y][i + 1];
-            tileMap[y][i + 1] = temp;
+            std::shared_ptr<Tile> temp = _tileMap[y][i];
+            _tileMap[y][i] = _tileMap[y][i + 1];
+            _tileMap[y][i + 1] = temp;
+            temp->setMapPosition({i + 1, y});
+            _tilesMoved += 1;
         }
     }
-    tileMap[y][i]->setMapPosition({i, y});
 }
 
 void GameScene::moveTileUp(int y, int x)
 {
     int i = 0;
     for (i = y; i > 0; i--) {
-        if (tileMap[i - 1][x] != nullptr)
+        if (_tileMap[i - 1][x] != nullptr) {
+            checkFusion(_tileMap[i][x], _tileMap[i - 1][x]);
             break;
+        }
         else {
             // Swap the tiles
-            std::shared_ptr<Tile> temp = tileMap[i][x];
-            tileMap[i][x] = tileMap[i - 1][x];
-            tileMap[i - 1][x] = temp;
+            std::shared_ptr<Tile> temp = _tileMap[i][x];
+            _tileMap[i][x] = _tileMap[i - 1][x];
+            _tileMap[i - 1][x] = temp;
+            temp->setMapPosition({x, i - 1});
+            _tilesMoved += 1;
         }
     }
-    tileMap[i][x]->setMapPosition({x, i});
 }
 
 void GameScene::moveTileDown(int y, int x)
 {
     int i = 0;
-    int mapHeight = tileMap.size();
+    int mapHeight = _tileMap.size();
     for (i = y; i < mapHeight - 1; i++) {
-        if (tileMap[i + 1][x] != nullptr)
+        if (_tileMap[i + 1][x] != nullptr) {
+            checkFusion(_tileMap[i][x], _tileMap[i + 1][x]);
             break;
+        }
         else {
             // Swap the tiles
-            std::shared_ptr<Tile> temp = tileMap[i][x];
-            tileMap[i][x] = tileMap[i + 1][x];
-            tileMap[i + 1][x] = temp;
+            std::shared_ptr<Tile> temp = _tileMap[i][x];
+            _tileMap[i][x] = _tileMap[i + 1][x];
+            _tileMap[i + 1][x] = temp;
+            temp->setMapPosition({x, i + 1});
+            _tilesMoved += 1;
         }
     }
-    tileMap[i][x]->setMapPosition({x, i});
 }
 
+void GameScene::checkFusion(std::shared_ptr<Tile> moving, std::shared_ptr<Tile> obstacle)
+{
+    int movingValue = moving->getValue();
+    int obstacleValue = obstacle->getValue();
+    if (movingValue == obstacleValue) {
+        _tilesMoved += 1;
+        obstacle->setValue(obstacleValue + movingValue);
+        removeEntity(moving);
+        int x = moving->getMapPosition().x;
+        int y = moving->getMapPosition().y;
+        if (y >= 0 && y < _tileMap.size() && x >= 0 && x < _tileMap[y].size() && _tileMap[y][x] != nullptr) {
+            _tileMap[y][x] = nullptr;
+        }
+        moving = nullptr;
+    }
+}
+
+void GameScene::putRandomTile()
+{
+    TilePos randomPos = getRandomTilePos(true);
+    std::shared_ptr<Tile> tile = std::make_shared<Tile>(Rectangle{
+                                                            _gridX + randomPos.x * (TILE_PADDING + _tileWidth) + TILE_PADDING,
+                                                            _gridY + randomPos.y * (TILE_PADDING + _tileHeight) + TILE_PADDING,
+                                                            _tileWidth,
+                                                            _tileHeight},
+                                                        randomPos, true);
+    _tileMap[randomPos.y][randomPos.x] = tile;
+    addEntity(tile);
+}
+
+void GameScene::putTile(TilePos pos)
+{
+    std::shared_ptr<Tile> tile = std::make_shared<Tile>(Rectangle{
+                                                            _gridX + pos.x * (TILE_PADDING + _tileWidth) + TILE_PADDING,
+                                                            _gridY + pos.y * (TILE_PADDING + _tileHeight) + TILE_PADDING,
+                                                            _tileWidth,
+                                                            _tileHeight},
+                                                        pos, true);
+    _tileMap[pos.y][pos.x] = tile;
+    addEntity(tile);
+}
+
+void GameScene::resetKeyevents()
+{
+    float currentTime = 0.0f;
+    static float previousTime = 0.0f;
+    const float timeInterval = 0.2f; // Reset the timer every 0.x seconds
+
+    currentTime = GetTime();
+    if (currentTime - previousTime >= timeInterval) {
+        previousTime = currentTime;
+        _isEvent = true;
+    }
+}
 
 void GameScene::update(float deltaTime)
 {
+    _tilesMoved = 0;
     if (_direction == Direction::Left || _direction == Direction::Right) {
-        for (int y = 0; y < tileMap.size(); y++) {
-            int startX = (_direction == Direction::Left) ? 0 : tileMap[y].size() - 1;
-            int endX = (_direction == Direction::Left) ? tileMap[y].size() : -1;
+        for (int y = 0; y < _tileMap.size(); y++) {
+            int startX = (_direction == Direction::Left) ? 0 : _tileMap[y].size() - 1;
+            int endX = (_direction == Direction::Left) ? _tileMap[y].size() : -1;
             int stepX = (_direction == Direction::Left) ? 1 : -1;
 
             for (int x = startX; x != endX; x += stepX) {
-                if (tileMap[y][x]) {
-                    tileMap[y][x]->setDirection(_direction);
+                if (_tileMap[y][x]) {
+                    _tileMap[y][x]->setDirection(_direction);
 
                     if (_direction == Direction::Left) {
                         moveTileLeft(y, x);
@@ -154,14 +202,14 @@ void GameScene::update(float deltaTime)
             }
         }
     } else if (_direction == Direction::Up || _direction == Direction::Down) {
-        for (int x = 0; x < tileMap[0].size(); x++) {
-            int startY = (_direction == Direction::Up) ? 0 : tileMap.size() - 1;
-            int endY = (_direction == Direction::Up) ? tileMap.size() : -1;
+        for (int x = 0; x < _tileMap[0].size(); x++) {
+            int startY = (_direction == Direction::Up) ? 0 : _tileMap.size() - 1;
+            int endY = (_direction == Direction::Up) ? _tileMap.size() : -1;
             int stepY = (_direction == Direction::Up) ? 1 : -1;
 
             for (int y = startY; y != endY; y += stepY) {
-                if (tileMap[y][x]) {
-                    tileMap[y][x]->setDirection(_direction);
+                if (_tileMap[y][x]) {
+                    _tileMap[y][x]->setDirection(_direction);
 
                     if (_direction == Direction::Up) {
                         moveTileUp(y, x);
@@ -175,19 +223,27 @@ void GameScene::update(float deltaTime)
     for (const auto& entity : m_entities) {
         entity->update(deltaTime, m_entities);
     }
+    _direction = Direction::None;
+    if (_tilesMoved) {
+        _isEvent = false;
+        putRandomTile();
+    }
 }
 
 void GameScene::handleEvent()
 {
-    if (IsKeyDown(KEY_UP)) {
-        _direction = Direction::Up;
-    } else if (IsKeyDown(KEY_DOWN)) {
-        _direction = Direction::Down;
-    } else if (IsKeyDown(KEY_LEFT)) {
-        _direction = Direction::Left;
-    } else if (IsKeyDown(KEY_RIGHT)) {
-        _direction = Direction::Right;
+    if (_isEvent) {
+        if (IsKeyDown(KEY_UP)) {
+            _direction = Direction::Up;
+        } else if (IsKeyDown(KEY_DOWN)) {
+            _direction = Direction::Down;
+        } else if (IsKeyDown(KEY_LEFT)) {
+            _direction = Direction::Left;
+        } else if (IsKeyDown(KEY_RIGHT)) {
+            _direction = Direction::Right;
+        }
     }
+    resetKeyevents();
 }
 
 void GameScene::draw() const
@@ -212,9 +268,9 @@ TilePos GameScene::getRandomTilePos(bool isMapped) const
 
     // Create a vector of all null elements in the tile map
     std::vector<TilePos> nonNullPositions;
-    for (int y = 0; y < tileMap.size(); ++y) {
-        for (int x = 0; x < tileMap[y].size(); ++x) {
-            if (!tileMap[y][x]) {
+    for (int y = 0; y < _tileMap.size(); ++y) {
+        for (int x = 0; x < _tileMap[y].size(); ++x) {
+            if (!_tileMap[y][x]) {
                 nonNullPositions.push_back({ x, y });
             }
         }

@@ -38,8 +38,9 @@ class Tile : public IEntity {
         bool isActive() const;
         int getValue() const;
         Direction getDirection() const;
-        void setDirection(Direction direction);
         TilePos getMapPosition() const;
+        void setValue(int value);
+        void setDirection(Direction direction);
         void setMapPosition(TilePos pos);
     protected:
     private:
